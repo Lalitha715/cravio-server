@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 });
 
 // Razorpay create-order
-app.post("/create-order", async (req, res) => {
+app.post("/api/create-order", async (req, res) => {
   try {
     const { amount } = req.body;
     if (!amount) return res.status(400).json({ error: "Amount is required" });
