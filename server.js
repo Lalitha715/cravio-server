@@ -16,7 +16,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",             // local dev
-      "https://cravio-user.vercel.app"     // deployed frontend
+      "https://cravio-user.vercel.app",
+      "https://cravio-user-ac01medni-lalithas-projects-fb8a4e21.vercel.app" 
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
