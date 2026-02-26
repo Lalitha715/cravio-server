@@ -25,8 +25,11 @@ module.exports = async (req, res) => {
 
     res.status(200).json(order);
 
-  } catch (err) {
-    console.error("Razorpay Error:", err);
-    res.status(500).json({ error: "Unable to create order" });
-  }
+  } catch (error) {
+  console.error("FULL ERROR:", error);
+  res.status(500).json({
+    message: error.message,
+    stack: error.stack
+  });
+}
 };
