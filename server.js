@@ -18,9 +18,11 @@ app.use(
       "https://cravio-user.vercel.app"
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
   })
 );
+app.options("*", cors());
 app.use(bodyParser.json());
 
 // Razorpay Configuration (Secure from .env)
@@ -38,7 +40,7 @@ app.get("/", (req, res) => {
 // =============================
 // Razorpay Create Order API
 // =============================
-app.post("/create-order", async (req, res) => {
+app.post("/api/create-order", async (req, res) => {
   try {
     const { amount } = req.body;
 
