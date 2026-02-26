@@ -1,25 +1,28 @@
-// api/index.js
+const serverless = require("serverless-http");
 const express = require("express");
 const Razorpay = require("razorpay");
 const cors = require("cors");
-const bodyParser = require("body-parser");
-const aiRoutes = require("../routes/aiRoutes");
+
+const aiRoutes = require("./routes/aiRoutes");
 
 const app = express();
-app.use(cors());
-app.use(bodyParser.json());
+
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://cravio-user.vercel.app"
+  ],
+  credentials: true
+}));
+
+app.use(express.json());
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
+  key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
-// Test route
-app.get("/", (req, res) => {
-  res.send("Cravio Server Running with Razorpay + AI ✅");
-});
-
-// Razorpay create-order
+// Razorpay order
 app.post("/api/create-order", async (req, res) => {
   try {
     const { amount } = req.body;
@@ -28,17 +31,20 @@ app.post("/api/create-order", async (req, res) => {
     const order = await razorpay.orders.create({
       amount: amount * 100,
       currency: "INR",
-      receipt: "receipt_order_" + Date.now(),
+      receipt: "receipt_order_" + Date.now()
     });
+
     res.json(order);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error creating Razorpay order" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Razorpay order failed" });
   }
 });
 
-// AI routes
 app.use("/api/ai", aiRoutes);
 
-// Export as serverless function
+app.get("/", (req, res) => res.send("Cravio Server Running ✅"));
+
+// Export for Vercel
 module.exports = app;
+module.exports.handler = serverless(app);
